@@ -7,8 +7,7 @@ MediBuddy is an AI Medical Chat tool designed to provide users with human-like a
 To run MediBuddy in a Colab notebook, follow these steps:
 
 1. Open the following URL in your browser: https://colab.research.google.com/github/martinteoharov/MediBuddy/blob/main/main.ipynb
-2. Click on "File" > "Save a copy in Drive" to create a copy of the notebook in your Google Drive account
-3. Follow the instructions in the notebook to run MediBuddy
+2. Follow the instructions in the notebook to run MediBuddy
 
 ## Getting Started - Locally
 
