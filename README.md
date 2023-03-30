@@ -7,15 +7,15 @@ MediBuddy is an AI Medical Chat tool designed to provide users with human-like a
 To run MediBuddy in a Colab notebook, follow these steps:
 
 1. Open the following link in your browser: https://colab.research.google.com/github/martinteoharov/MediBuddy/blob/main/main.ipynb
-2. Click the "Copy to Drive" to make your own copy of the notebook.
-3. Follow the instructions in the notebook to run MediBuddy.
+2. Follow the instructions in the notebook to run MediBuddy.
 
 ## Pushing to GitHub from Colab
 
 1. Open the Colab notebook that you want to push changes to.
 2. Click on "File" in the top left corner, then "Save a copy in GitHub." This will open the GitHub integration panel.
-3. In the GitHub integration panel, select the repository you want to push changes to, enter a commit message, and click "OK."
-4. Wait for the changes to be pushed to GitHub. You can check the status of the push in the output panel at the bottom of the screen.
+3. Select the branch you want to push to (if you are not Martin, don't push to main)
+4. In the GitHub integration panel, select the repository you want to push changes to, enter a commit message, and click "OK."
+5. Wait for the changes to be pushed to GitHub. You can check the status of the push in the output panel at the bottom of the screen.
 
 ## Pulling from GitHub to Colab
 
