@@ -25,7 +25,7 @@ from transformers import GPTNeoForCausalLM, GPT2Tokenizer
 
 
 load_checkpoint = False
-finetune = True
+finetune = False
 
 
 # In[3]:
@@ -56,11 +56,11 @@ model_path = "./model"
 
 if load_checkpoint:
     print("load model from checkpoint")
-    model = GPTNeoForCausalLM.from_pretrained(model_path).cuda()
+    model = GPTNeoForCausalLM.from_pretrained(model_path)
     model.resize_token_embeddings(len(tokenizer))
 else:
     print("load pretrained GPTNeo")
-    model = GPTNeoForCausalLM.from_pretrained(MODEL_NAME).cuda()
+    model = GPTNeoForCausalLM.from_pretrained(MODEL_NAME)
     model.resize_token_embeddings(len(tokenizer))
 
 
@@ -146,7 +146,7 @@ def train(finetune):
 train(finetune)
 
 model.eval()
-def message(input_text: str, model=model, tokenizer=tokenizer, device='cuda'):
+def message(input_text: str, model=model, tokenizer=tokenizer, device='cpu'):
     prompt = (input_text)
 
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids
@@ -168,7 +168,23 @@ response = message(msg_txt)
 print(f"Patient: {msg_txt}")
 print(f"Doctor: {response}")
 
+from flask import Flask, request
+from flask_cors import CORS
 
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/process', methods=['POST'])
+def process_text():
+    text = request.form.get('text')
+    # Process the text variable here
+    # For example, you can print it
+    response = message(text)
+    return response
+
+if __name__ == '__main__':
+    app.run()
 
 
 # In[13]:
