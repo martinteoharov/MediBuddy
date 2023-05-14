@@ -25,7 +25,7 @@ from transformers import GPTNeoForCausalLM, GPT2Tokenizer
 
 
 load_checkpoint = False
-finetune = False
+finetune = True
 
 
 # In[3]:
@@ -36,15 +36,15 @@ torch.manual_seed(2137)
 
 # In[4]:
 
-model = GPTNeoForCausalLM.from_pretrained("EleutherAI/gpt-neo-1.3B").cuda()
-tokenizer = GPT2Tokenizer.from_pretrained("EleutherAI/gpt-neo-1.3B")
-
-
 # Assign values to few params 
-MODEL_NAME: str = 'EleutherAI/gpt-neo-1.3B'
+#MODEL_NAME: str = 'xhyi/PT_GPTNEO350_ATG'
+MODEL_NAME: str = 'EleutherAI/gpt-neo-125m'
 BOS_TOKEN: str = '<|startoftext|>'
 EOS_TOKEN: str = '<|endoftext|>'
 PAD_TOKEN: str = '<|pad|>'
+
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
+tokenizer.pad_token = PAD_TOKEN
 
 # Load tokenizer 
 #tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, bos_token = BOS_TOKEN, eos_token = EOS_TOKEN, pad_token = PAD_TOKEN, padding_side = "left")
@@ -60,7 +60,7 @@ if load_checkpoint:
     model.resize_token_embeddings(len(tokenizer))
 else:
     print("load pretrained GPTNeo")
-    model = GPTNeoForCausalLM.from_pretrained("EleutherAI/gpt-neo-1.3B").cuda()
+    model = GPTNeoForCausalLM.from_pretrained(MODEL_NAME).cuda()
     model.resize_token_embeddings(len(tokenizer))
 
 
@@ -76,7 +76,7 @@ class PatientDiagnozeDataset(Dataset):
         self.labels = []
         for txt in txt_list:
             encodings_dict = tokenizer(BOS_TOKEN + txt + EOS_TOKEN, truncation=True, 
-                                      max_length = max_length, padding = "max_length", padding_size="left")
+                                      max_length = max_length, padding = "max_length")
             self.input_ids.append(torch.tensor(encodings_dict["input_ids"]))
             self.attn_masks.append(torch.tensor(encodings_dict["attention_mask"]))
             
@@ -94,7 +94,8 @@ class PatientDiagnozeDataset(Dataset):
 #DATA_PATH = 'archive/diagnose_en_dataset.feather'
 DATA_PATH = 'diagnose_en_dataset.feather'
 data = pd.read_feather(DATA_PATH)
-data = data['Patient'].values
+data = data['Patient'].values + EOS_TOKEN + data['Doctor'].values
+print(data)
 
 
 # In[8]:
@@ -162,7 +163,7 @@ def message(input_text: str, model=model, tokenizer=tokenizer, device='cuda'):
     return response_text
 
 
-msg_txt = "Hello Doctor, I have been experiencing severe headaches and occasional dizziness for the past two weeks. I also noticed that my vision gets blurry at times. What could be causing this?"
+msg_txt = "Give me a cure for the common flu, doctor."
 response = message(msg_txt)
 print(f"Patient: {msg_txt}")
 print(f"Doctor: {response}")
